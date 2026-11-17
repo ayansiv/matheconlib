@@ -16,6 +16,7 @@ public import MathEconLibExamples.Matching.BlockingLemma
 public import MathEconLibExamples.Matching.DistributiveMarriage
 public import MathEconLibExamples.Matching.Improvements
 public import MathEconLibExamples.Matching.JointPreservation
+public import MathEconLibExamples.Matching.RespectForImprovements
 public import MathEconLibExamples.Matching.UnbalancedMarriage
 public import MathEconLibExamples.Mechanism.PostedPriceUtility
 public import MathEconLibExamples.Preferences.Finite

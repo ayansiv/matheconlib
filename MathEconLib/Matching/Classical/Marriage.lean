@@ -13,6 +13,7 @@ public import MathEconLib.Matching.Classical.Marriage.Distributive
 public import MathEconLib.Matching.Classical.Marriage.FixedPointConvergence
 public import MathEconLib.Matching.Classical.Marriage.Improvements
 public import MathEconLib.Matching.Classical.Marriage.LoneWolf
+public import MathEconLib.Matching.Classical.Marriage.RespectForImprovements
 public import MathEconLib.Matching.Classical.Marriage.StableOrder
 
 /-!
@@ -32,7 +33,8 @@ and the distributive stable-matching lattice with its intrinsic ideal representa
 is individually rational for the women makes every man strictly better off than the
 man-optimal stable matching.
 `Marriage.Improvements` defines unambiguous improvements and proves that they preserve
-selection from a fixed menu.
+selection from a fixed menu. `Marriage.RespectForImprovements` proves that man-proposing
+deferred acceptance respects these improvements.
 `Marriage.DeferredAcceptance` develops the
 direct proposal algorithm; `Marriage.DeferredAcceptanceFixedPoints` relates
 its terminal outputs to the contracts fixed points; and
@@ -40,4 +42,3 @@ its terminal outputs to the contracts fixed points; and
 -/
 
 @[expose] public section
-

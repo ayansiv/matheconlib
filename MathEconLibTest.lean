@@ -42,6 +42,7 @@ import MathEconLibTest.Matching.Completion
 import MathEconLibTest.Matching.DistributiveMarriage
 import MathEconLibTest.Matching.Improvements
 import MathEconLibTest.Matching.PublicImport
+import MathEconLibTest.Matching.RespectForImprovements
 import MathEconLibTest.Matching.Roommates
 import MathEconLibTest.Matching.SellerParticipation
 import MathEconLibTest.Matching.SellerParticipationPublicImport

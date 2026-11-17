@@ -96,6 +96,7 @@ public import MathEconLib.Matching.Classical.Marriage.Improvements
 public import MathEconLib.Matching.Classical.Marriage.LoneWolf
 public import MathEconLib.Matching.Classical.Marriage.Optimality
 public import MathEconLib.Matching.Classical.Marriage.Preferences
+public import MathEconLib.Matching.Classical.Marriage.RespectForImprovements
 public import MathEconLib.Matching.Classical.Marriage.StableOrder
 public import MathEconLib.Matching.Classical.Marriage.ToContracts
 public import MathEconLib.Matching.Classical.Roommates
