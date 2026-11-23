@@ -5,6 +5,7 @@ Authors: Scott Duke Kominers
 -/
 module
 
+public import MathEconLib.Matching.Classical.Marriage.BlockingLemma
 public import MathEconLib.Matching.Classical.Marriage.DeferredAcceptance
 public import MathEconLib.Matching.Classical.Marriage.DeferredAcceptanceComputable
 public import MathEconLib.Matching.Classical.Marriage.DeferredAcceptanceFixedPoints
@@ -27,6 +28,9 @@ The components separate basic economic definitions and direct classical facts,
 preferences and their induced choice, the embedding into contracts, stable
 existence, the symmetric extrema, fixed-point convergence, lone wolf results,
 and the distributive stable-matching lattice with its intrinsic ideal representation.
+`Marriage.BlockingLemma` proves the blocking lemma and deduces that no matching that
+is individually rational for the women makes every man strictly better off than the
+man-optimal stable matching.
 `Marriage.Improvements` defines unambiguous improvements and proves that they preserve
 selection from a fixed menu.
 `Marriage.DeferredAcceptance` develops the
