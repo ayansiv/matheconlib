@@ -19,7 +19,8 @@ unchanged preferences satisfy it by reflexivity.
 
 ## Main statements
 
-* `MarriageMarket.leM_of_isUnambiguousImprovement`: comparison with any old stable matching.
+* `MarriageMarket.IsManOptimal.leM_of_isUnambiguousImprovement`: comparison with any old
+  stable matching.
 * `MarriageMarket.leM_galeShapley_of_isUnambiguousImprovement`: the deferred-acceptance corollary.
 * `MarriageMarket.leM_galeShapleyComputable_of_isUnambiguousImprovement`: its executable version.
 
@@ -27,9 +28,11 @@ unchanged preferences satisfy it by reflexivity.
 
 If `m` strictly preferred an old stable matching to the new man-optimal one, clauses 1 and 3
 would make that old matching individually rational for women under the new preferences. The
-blocking lemma supplies a blocking pair whose man is not `m`. Clauses 1 and 2 imply the woman's
-comparison already held before the change; unchanged men's preferences then contradict old
-stability. Worked markets apply the theorem and show that dropping any clause can harm `m`.
+blocking lemma supplies a blocking pair whose man is not `m`. The woman in this pair had a
+partner in the old matching, so she is comparing two proposers. By clauses 1 and 2, she already
+preferred the blocking proposer to her old partner. Since the men's preferences are unchanged,
+the pair would have blocked the old matching. Worked markets apply the theorem and show that
+dropping any clause can harm `m`.
 
 ## References
 
@@ -61,7 +64,7 @@ variable {M : Type u} {W : Type v}
 /-- **Respect for improvements.** Suppose the women's preferences change by an unambiguous
 improvement for `m` and the men's preferences do not change. Then `m` weakly prefers the new
 man-optimal stable matching to every matching that was stable before the change. -/
-theorem leM_of_isUnambiguousImprovement [Finite M] [Finite W]
+theorem IsManOptimal.leM_of_isUnambiguousImprovement [Finite M] [Finite W]
     (old new : MarriageMarket M W) {m : M} (hM : new.prefM = old.prefM)
     (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) {μ μ' : M ≃. W}
     (hμ : old.IsStableMatching μ) (hμ' : new.IsManOptimal μ') : old.leM m (μ m) (μ' m) := by
@@ -76,7 +79,7 @@ theorem leM_of_isUnambiguousImprovement [Finite M] [Finite W]
   -- The old stable matching is individually rational for the women under the new preferences.
   have hν : new.IndividuallyRationalW μ := by
     intro w
-    have hw : old.leW w none (μ.symm w) := hμ.1.2 w
+    have hw : old.leW w none (μ.symm w) := IsStableMatching.individuallyRationalForW old hμ w
     change new.leW w none (μ.symm w)
     cases hs : μ.symm w with
     | none => exact (new.prefW w).le_refl _
@@ -119,7 +122,7 @@ theorem leM_galeShapley_of_isUnambiguousImprovement [Fintype M] [Fintype W]
     (old new : MarriageMarket M W) {m : M} (hM : new.prefM = old.prefM)
     (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
     old.leM m (old.galeShapley m) (new.galeShapley m) :=
-  leM_of_isUnambiguousImprovement old new hM h old.stable_galeShapley
+  IsManOptimal.leM_of_isUnambiguousImprovement old new hM h old.stable_galeShapley
     new.isManOptimal_galeShapley
 
 /-- Respect for improvements for the executable algorithm. -/

@@ -16,6 +16,7 @@ This module extends the worked markets in `MathEconLibExamples.Matching.Improvem
 `NewlyAcceptable` applies respect for improvements when a rival becomes acceptable; `Promoted`
 applies it when the distinguished proposer overtakes a rival and checks a strict gain independently.
 `Overtaken`, `RivalRejected`, and `RivalsSwapped` show strict losses when clauses 1, 3, and 2 fail.
+Running `RivalRejected` in reverse shows a strict gain when a rival becomes acceptable.
 The outcomes are computed by kernel evaluation and transported along
 `MarriageMarket.galeShapleyComputable_eq_galeShapley`.
 -/
@@ -112,7 +113,7 @@ theorem order₃_lt {n : ℕ} {v : Fin 3 → ℕ} {h : Function.Injective (rank�
     {a b : Option (Fin 3)} : (order₃ n v h).lt a b ↔ rank₃ n v a < rank₃ n v b :=
   Iff.rfl
 
-/-! ## Deferred acceptance when the third clause fails
+/-! ## Losing and restoring a rival's acceptability
 
 Two men and two women. The distinguished man `true` ranks woman `false` first, and man `false`
 ranks woman `true` first. Woman `false` ranks man `false` above man `true`. Only woman `true`
@@ -161,13 +162,25 @@ theorem galeShapley_new : (market newOrder).galeShapley true = some true := by
   rw [← galeShapleyComputable_eq_galeShapley]
   decide +kernel
 
-/-- The distinguished man is strictly worse off after the change. -/
+/-- The distinguished man strictly prefers the outcome where his rival is acceptable. -/
 theorem ltM_galeShapley :
     (market oldOrder).ltM true ((market newOrder).galeShapley true)
       ((market oldOrder).galeShapley true) := by
   rw [galeShapley_old, galeShapley_new]
   change rank 0 2 1 (some true) < rank 0 2 1 (some false)
   decide
+
+/-- Run the change in reverse. Woman `true` accepts the rival at his first choice, so he never
+proposes to woman `false`. The distinguished man moves from his second choice to his first,
+as `galeShapley_new` and `galeShapley_old` show. -/
+theorem leM_galeShapley_reverse :
+    (market newOrder).leM true ((market newOrder).galeShapley true)
+      ((market oldOrder).galeShapley true) := by
+  apply (market newOrder).leM_galeShapley_of_isUnambiguousImprovement (market oldOrder) rfl
+  intro w
+  cases w with
+  | false => exact ⟨fun _ h => h, fun _ _ _ _ => Iff.rfl, fun _ _ h => h⟩
+  | true => exact NewlyAcceptable.isUnambiguousImprovement
 
 end RivalRejected
 

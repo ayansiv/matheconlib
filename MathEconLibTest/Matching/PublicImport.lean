@@ -116,7 +116,7 @@ example {M W : Type} [Finite M] [Finite W] (old new : MarriageMarket M W) {m : M
     (hM : new.prefM = old.prefM)
     (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) {μ μ' : M ≃. W}
     (hμ : old.IsStableMatching μ) (hμ' : new.IsManOptimal μ') : old.leM m (μ m) (μ' m) :=
-  leM_of_isUnambiguousImprovement old new hM h hμ hμ'
+  IsManOptimal.leM_of_isUnambiguousImprovement old new hM h hμ hμ'
 
 example {M W : Type} [Fintype M] [Fintype W] (old new : MarriageMarket M W) {m : M}
     (hM : new.prefM = old.prefM)
