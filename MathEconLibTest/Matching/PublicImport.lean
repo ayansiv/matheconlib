@@ -10,8 +10,9 @@ public import MathEconLib
 /-!
 Client checks through the full public root. These exercise the raw fixed-point
 lattice, its IRC-dependent economic interpretation, structural locality, and
-the agreement of both executable algorithms with their optimal endpoints, and
-fixed-menu choice under unambiguous improvements.
+the agreement of both executable algorithms with their optimal endpoints,
+fixed-menu choice and deferred acceptance under unambiguous improvements, and
+the blocking lemma and weak Pareto optimality of deferred acceptance.
 -/
 
 @[expose] public section
@@ -109,6 +110,79 @@ example {M : Type} {old new : LinearOrder (Option M)} {m a : M}
 example {M : Type} (ord : LinearOrder (Option M)) (m : M) : IsUnambiguousImprovement ord ord m :=
   ⟨fun _ h => h, fun _ _ _ _ => Iff.rfl, fun _ _ h => h⟩
 
+/-! The three forms of respect for improvements, reached through the public root. -/
+
+example {M W : Type} [Finite M] [Finite W] (old new : MarriageMarket M W) {m : M}
+    (hM : new.prefM = old.prefM)
+    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) {μ μ' : M ≃. W}
+    (hμ : old.IsStableMatching μ) (hμ' : new.IsManOptimal μ') : old.leM m (μ m) (μ' m) :=
+  IsManOptimal.leM_of_isUnambiguousImprovement old new hM h hμ hμ'
+
+example {M W : Type} [Fintype M] [Fintype W] (old new : MarriageMarket M W) {m : M}
+    (hM : new.prefM = old.prefM)
+    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
+    old.leM m (old.galeShapley m) (new.galeShapley m) :=
+  old.leM_galeShapley_of_isUnambiguousImprovement new hM h
+
+example {M W : Type} [Fintype M] [Fintype W] [DecidableEq M] [DecidableEq W]
+    (old new : MarriageMarket M W) {m : M} (hM : new.prefM = old.prefM)
+    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
+    old.leM m (old.galeShapleyComputable m) (new.galeShapleyComputable m) :=
+  old.leM_galeShapleyComputable_of_isUnambiguousImprovement new hM h
+
 end Improvements
+
+section BlockingLemma
+
+open MarriageMarket
+
+/-! The two forms of the blocking lemma, reached through the public root. -/
+
+example {M W : Type} [Fintype M] [Fintype W] (mkt : MarriageMarket M W) {μ ν : M ≃. W}
+    (hμ : mkt.IsManOptimal μ) (hν : mkt.IndividuallyRational ν) {m₀ : M}
+    (h₀ : mkt.ltM m₀ (μ m₀) (ν m₀)) :
+    ∃ m w, ¬ mkt.ltM m (μ m) (ν m) ∧ (∃ m', mkt.ltM m' (μ m') (ν m') ∧ ν m' = some w) ∧
+      mkt.IsBlockingPair ν m w :=
+  IsManOptimal.exists_isBlockingPair_of_ltM mkt hμ hν.2 h₀
+
+example {M W : Type} [Fintype M] [Fintype W] (mkt : MarriageMarket M W) {ν : M ≃. W}
+    (hν : mkt.IndividuallyRational ν) {m₀ : M} (h₀ : mkt.ltM m₀ (mkt.galeShapley m₀) (ν m₀)) :
+    ∃ m w, ¬ mkt.ltM m (mkt.galeShapley m) (ν m) ∧
+      (∃ m', mkt.ltM m' (mkt.galeShapley m') (ν m') ∧ ν m' = some w) ∧
+      mkt.IsBlockingPair ν m w :=
+  mkt.exists_isBlockingPair_of_ltM_galeShapley hν.2 h₀
+
+/-! A matching that some man strictly prefers to deferred acceptance is not stable. -/
+
+example {M W : Type} [Fintype M] [Fintype W] (mkt : MarriageMarket M W) {ν : M ≃. W}
+    (hν : mkt.IndividuallyRational ν) {m₀ : M} (h₀ : mkt.ltM m₀ (mkt.galeShapley m₀) (ν m₀)) :
+    ∃ m w, mkt.IsBlockingPair ν m w := by
+  obtain ⟨m, w, -, -, h⟩ := mkt.exists_isBlockingPair_of_ltM_galeShapley hν.2 h₀
+  exact ⟨m, w, h⟩
+
+/-! The three forms of weak Pareto optimality, reached through the public root. -/
+
+example {M W : Type} [Fintype M] [Fintype W] [Nonempty M] (mkt : MarriageMarket M W)
+    {μ ν : M ≃. W} (hμ : mkt.IsManOptimal μ) (hν : mkt.IndividuallyRational ν) :
+    ¬ ∀ m, mkt.ltM m (μ m) (ν m) :=
+  IsManOptimal.not_forall_ltM mkt hμ hν.2
+
+example {M W : Type} [Fintype M] [Fintype W] [Nonempty M] (mkt : MarriageMarket M W)
+    {ν : M ≃. W} (hν : mkt.IndividuallyRational ν) :
+    ¬ ∀ m, mkt.ltM m (mkt.galeShapley m) (ν m) :=
+  mkt.not_forall_ltM_galeShapley hν.2
+
+example {M W : Type} [Fintype M] [Fintype W] [DecidableEq M] [DecidableEq W] [Nonempty M]
+    (mkt : MarriageMarket M W) {ν : M ≃. W} (hν : mkt.IndividuallyRational ν) :
+    ¬ ∀ m, mkt.ltM m (mkt.galeShapleyComputable m) (ν m) :=
+  mkt.not_forall_ltM_galeShapleyComputable hν.2
+
+/-! With no men, every alternative vacuously makes every man strictly better off. -/
+
+example (mkt : MarriageMarket Empty Unit) (ν : Empty ≃. Unit) :
+    ∀ m, mkt.ltM m (mkt.galeShapley m) (ν m) :=
+  fun m => m.elim
+
+end BlockingLemma
 
 end MathEconLibTest.Matching

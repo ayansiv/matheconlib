@@ -38,6 +38,7 @@ import MathEconLibTest.GameTheory.Transport
 import MathEconLibTest.GameTheory.VectorPayoffs
 import MathEconLibTest.Manual.BeckerResearch
 import MathEconLibTest.Manual.HandsOn
+import MathEconLibTest.Matching.BlockingLemma
 import MathEconLibTest.Matching.Completion
 import MathEconLibTest.Matching.Continuum
 import MathEconLibTest.Matching.Continuum.Antipodal
@@ -45,6 +46,7 @@ import MathEconLibTest.Matching.Continuum.Compatibility
 import MathEconLibTest.Matching.DistributiveMarriage
 import MathEconLibTest.Matching.Improvements
 import MathEconLibTest.Matching.PublicImport
+import MathEconLibTest.Matching.RespectForImprovements
 import MathEconLibTest.Matching.Roommates
 import MathEconLibTest.Matching.SellerParticipation
 import MathEconLibTest.Matching.SellerParticipationPublicImport
