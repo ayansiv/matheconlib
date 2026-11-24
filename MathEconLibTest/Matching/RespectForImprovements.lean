@@ -5,33 +5,12 @@ Authors: Ayan
 -/
 module
 
-import MathEconLib
 import MathEconLibExamples.Matching.RespectForImprovements
 
-/-! Public import and regression checks for deferred acceptance respecting improvements. -/
+/-! Regression checks for deferred acceptance respecting improvements. -/
 
 open MathEconLib.Matching MarriageMarket
 open MathEconLibExamples.Matching.Improvements
-
-/-! The three forms of respect for improvements, reached through the public root. -/
-
-example {M W : Type} [Fintype M] [Fintype W] (old new : MarriageMarket M W) {m : M}
-    (hM : new.prefM = old.prefM)
-    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) {μ μ' : M ≃. W}
-    (hμ : old.IsStableMatching μ) (hμ' : new.IsManOptimal μ') : old.leM m (μ m) (μ' m) :=
-  leM_of_isUnambiguousImprovement old new hM h hμ hμ'
-
-example {M W : Type} [Fintype M] [Fintype W] (old new : MarriageMarket M W) {m : M}
-    (hM : new.prefM = old.prefM)
-    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
-    old.leM m (old.galeShapley m) (new.galeShapley m) :=
-  old.leM_galeShapley_of_isUnambiguousImprovement new hM h
-
-example {M W : Type} [Fintype M] [Fintype W] [DecidableEq M] [DecidableEq W]
-    (old new : MarriageMarket M W) {m : M} (hM : new.prefM = old.prefM)
-    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
-    old.leM m (old.galeShapleyComputable m) (new.galeShapleyComputable m) :=
-  old.leM_galeShapleyComputable_of_isUnambiguousImprovement new hM h
 
 /-! The conclusion is stated in the old market, and reads the same in the new one. -/
 

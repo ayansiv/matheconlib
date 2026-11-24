@@ -11,8 +11,8 @@ public import MathEconLib
 Client checks through the full public root. These exercise the raw fixed-point
 lattice, its IRC-dependent economic interpretation, structural locality, and
 the agreement of both executable algorithms with their optimal endpoints,
-fixed-menu choice under unambiguous improvements, and the blocking lemma and
-weak Pareto optimality of deferred acceptance.
+fixed-menu choice and deferred acceptance under unambiguous improvements, and
+the blocking lemma and weak Pareto optimality of deferred acceptance.
 -/
 
 @[expose] public section
@@ -109,6 +109,26 @@ example {M : Type} {old new : LinearOrder (Option M)} {m a : M}
 
 example {M : Type} (ord : LinearOrder (Option M)) (m : M) : IsUnambiguousImprovement ord ord m :=
   ⟨fun _ h => h, fun _ _ _ _ => Iff.rfl, fun _ _ h => h⟩
+
+/-! The three forms of respect for improvements, reached through the public root. -/
+
+example {M W : Type} [Finite M] [Finite W] (old new : MarriageMarket M W) {m : M}
+    (hM : new.prefM = old.prefM)
+    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) {μ μ' : M ≃. W}
+    (hμ : old.IsStableMatching μ) (hμ' : new.IsManOptimal μ') : old.leM m (μ m) (μ' m) :=
+  leM_of_isUnambiguousImprovement old new hM h hμ hμ'
+
+example {M W : Type} [Fintype M] [Fintype W] (old new : MarriageMarket M W) {m : M}
+    (hM : new.prefM = old.prefM)
+    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
+    old.leM m (old.galeShapley m) (new.galeShapley m) :=
+  old.leM_galeShapley_of_isUnambiguousImprovement new hM h
+
+example {M W : Type} [Fintype M] [Fintype W] [DecidableEq M] [DecidableEq W]
+    (old new : MarriageMarket M W) {m : M} (hM : new.prefM = old.prefM)
+    (h : ∀ w, IsUnambiguousImprovement (new.prefW w) (old.prefW w) m) :
+    old.leM m (old.galeShapleyComputable m) (new.galeShapleyComputable m) :=
+  old.leM_galeShapleyComputable_of_isUnambiguousImprovement new hM h
 
 end Improvements
 
